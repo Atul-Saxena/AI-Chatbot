@@ -1,13 +1,15 @@
-import { useState } from 'react'
-import axios from 'axios';
-import Chatbot from './chat_component';
+import { lazy, Suspense } from 'react'
+
+const Chatbot = lazy(() => import('./mychatbot'));
 
 function App() {
 
 
-  
+
   return (
-    <Chatbot />
+    <Suspense fallback={<div>Loading...</div>}>
+      <Chatbot />
+    </Suspense>
   )
 }
 

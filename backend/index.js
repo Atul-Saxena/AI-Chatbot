@@ -10,12 +10,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.post("/", async(req, res) => {
+app.post("/", async (req, res) => {
     const baseURL = process.env.BASE_URL;
     const apiKey = process.env.API_KEY;
     const userPrompt = req.body.data;
     const systemPrompt = "You are a blockchain expert. Keep it simple and very short and always be helpful. Be descriptive when necessary only";
-    
 
     const api = new OpenAI({
         apiKey,
@@ -39,12 +38,10 @@ app.post("/", async(req, res) => {
     });
 
     const response = completion.choices[0].message.content;
-    console.log("User:", userPrompt);
-    console.log("AI:", response);
+
 
     res.send(response);
 });
-
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
 });
