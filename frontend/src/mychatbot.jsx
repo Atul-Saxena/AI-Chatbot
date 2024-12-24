@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 
 const mychatbot = () => {
-    const [chat, setChat] = useState([]);
+    const [chat, setChat] = useState([{ role: "user", data: "input hey we are here" },{ role: "AI", data: "input hey we are here" }]);
     const [loading, setLoading] = useState(true);
     const [input, setInput] = useState("");
 
@@ -33,7 +33,7 @@ const mychatbot = () => {
         <>
             <div className='h-screen w-screen bg-zinc-900 text-white mx-auto flex flex-col justify-center items-center' >
 
-                <div className="w-1/2 mt-5 mb-5 overflow-y-scroll scrollbar-hide">
+                <div className="w-screen px-10 md:w-1/2 md:px-0 mt-5 mb-5 overflow-y-scroll scrollbar-hide">
                     {chat.map((item, index) => {
                         return (
                             <>
@@ -60,7 +60,7 @@ const mychatbot = () => {
                 </div>
 
 
-                <form onSubmit={handlesubmit} className="w-2/3 mt-5 mb-5 flex justify-end">
+                <form onSubmit={handlesubmit} className="w-screen md:w-2/3 mt-5 mb-5 flex justify-end">
 
                     <input
                         className="mr-2.5 h-full min-h-[54px] w-full rounded-lg border px-5 py-5 text-sm font-medium focus:outline-0 border-zinc-800 bg-transparent text-white placeholder:text-zinc-400"
