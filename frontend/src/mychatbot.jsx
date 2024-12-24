@@ -1,19 +1,20 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import axios from 'axios';
 
 const mychatbot = () => {
-    const [chat, setChat] = useState([{ role: "user", data: "input hey we are here" },{ role: "AI", data: "input hey we are here" }]);
+    const [chat, setChat] = useState([]);
     const [loading, setLoading] = useState(true);
     const [input, setInput] = useState("");
+    const [prompt, setsysprompt] = useState("You are a blockchain expert. Keep it simple and very short and always be helpful and funky. Be descriptive when necessary only. use the Previous Conversation to answer the User Prompt");
 
     const handlesubmit = async (e) => {
         e.preventDefault();
         setChat((prevChat) => [...prevChat, { role: "user", data: input }]);
         try {
-
-            const response = await axios.post(`http://localhost:3000`, { data: input });
-            console.log(response);
+            
+            const response = await axios.post(`http://localhost:3000`, { data: input, chats: chat, systemPrompt:prompt });
+            console.log(response.data);
 
             const newChat = { role: "AI", data: response.data };
             setChat((prevChat) => [...prevChat, newChat]);
@@ -33,7 +34,8 @@ const mychatbot = () => {
         <>
             <div className='h-screen w-screen bg-zinc-900 text-white mx-auto flex flex-col justify-center items-center' >
 
-                <div className="w-screen px-10 md:w-1/2 md:px-0 mt-5 mb-5 overflow-y-scroll scrollbar-hide">
+                <div className="w-screen px-10 md:w-1/2 md:px-0 mt-5 mb-5 overflow-y-scroll scrollbar-hide"> {/* overflow-y-scroll scrollbar-hide */}
+                
                     {chat.map((item, index) => {
                         return (
                             <>
@@ -45,9 +47,9 @@ const mychatbot = () => {
                                             </div>
                                             :
                                             <div className=" w-full flex justify-start items-center shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)]">
-                                                {loading  ? <p className='text-xl text-gray-900 dark:text-white' key={index}>Loading...</p> : <p className='text-xl text-gray-900 dark:text-white' key={index}>AI : {item.data}</p>}
+                                                {loading ? <p className='text-xl text-gray-900 dark:text-white' key={index}>Loading...</p> : <p className='text-xl text-gray-900 dark:text-white' key={index}>AI : {item.data}</p>}
                                             </div>
-                                            
+
                                     }
 
                                 </div>
@@ -55,7 +57,6 @@ const mychatbot = () => {
                         )
                     }
                     )}
-
 
                 </div>
 
@@ -76,7 +77,7 @@ const mychatbot = () => {
                         Submit
                     </button>
 
-                    </form>
+                </form>
 
 
             </div>
