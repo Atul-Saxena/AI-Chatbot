@@ -1,19 +1,33 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios';
 
 const mychatbot = () => {
     const [chat, setChat] = useState([]);
     const [loading, setLoading] = useState(true);
     const [input, setInput] = useState("");
-    const [prompt, setsysprompt] = useState("You are a blockchain expert. Keep it simple and very short and always be helpful and funky. Be descriptive when necessary only. use the Previous Conversation to answer the User Prompt");
+    const [prompt, setsysprompt] = useState("You are a blockchain expert. Keep it simple and very short, always be helpful, along with being funny and funky. Be descriptive when necessary only. use the Previous Conversation to answer the User Prompt");
+
+    const scrollRef = useRef(null);
+
+    const scrollToBottom = () => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        console.log(scrollRef.current);
+
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chat]);
+
 
     const handlesubmit = async (e) => {
         e.preventDefault();
         setChat((prevChat) => [...prevChat, { role: "user", data: input }]);
         try {
-            
-            const response = await axios.post(`http://localhost:3000`, { data: input, chats: chat, systemPrompt:prompt });
+
+            const response = await axios.post(`http://localhost:3000`, { data: input, chats: chat, systemPrompt: prompt });
             console.log(response.data);
 
             const newChat = { role: "AI", data: response.data };
@@ -34,8 +48,8 @@ const mychatbot = () => {
         <>
             <div className='h-screen w-screen bg-zinc-900 text-white mx-auto flex flex-col justify-center items-center' >
 
-                <div className="w-screen px-10 md:w-1/2 md:px-0 mt-5 mb-5 overflow-y-scroll scrollbar-hide"> {/* overflow-y-scroll scrollbar-hide */}
-                
+                <div className="w-screen px-10 md:w-1/2 md:px-0 mt-5 mb-5 overflow-y-scroll scrollbar-hide" > {/* overflow-y-scroll */}
+
                     {chat.map((item, index) => {
                         return (
                             <>
@@ -51,7 +65,7 @@ const mychatbot = () => {
                                             </div>
 
                                     }
-
+                                    <div ref={scrollRef}></div>
                                 </div>
                             </>
                         )
@@ -62,6 +76,7 @@ const mychatbot = () => {
 
 
                 <form onSubmit={handlesubmit} className="w-screen md:w-2/3 mt-5 mb-5 flex justify-end">
+
 
                     <input
                         className="mr-2.5 h-full min-h-[54px] w-full rounded-lg border px-5 py-5 text-sm font-medium focus:outline-0 border-zinc-800 bg-transparent text-white placeholder:text-zinc-400"
@@ -86,4 +101,5 @@ const mychatbot = () => {
 }
 
 export default mychatbot;
+
 
